@@ -20,11 +20,14 @@ class Player():
                 if name == "player":
                         self.x, self.y = 16, SCR_HEI/2
                 else:
-                        self.x, self.y = SCR_WID-16, SCR_HEI/2 
+                        self.x, self.y = SCR_WID-48, SCR_HEI/2 
                 self.speed = 3
-                self.padWid, self.padHei = 8, 64
+                self.padWid, self.padHei = 32, 64
                 self.score = 0
                 self.scoreFont = pygame.font.Font("imagine_font.ttf", 64)
+                self.img = pygame.image.load("paddle.jpg")
+                self.paddle = pygame.transform.scale(self.img, (self.padWid, self.padHei))
+                self.rect = self.paddle.get_rect()
        
         def scoring(self, name):
                 scoreBlit = self.scoreFont.render(str(self.score), 1, (255, 0, 0))
@@ -66,6 +69,7 @@ class Player():
        
         def draw(self):
                 pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.padWid, self.padHei))
+                screen.blit(self.paddle, (self.x, self.y))
  
 ##class Enemy():
 ##        def __init__(self):
@@ -133,7 +137,7 @@ class Ball():
                 #enemy
                 for n in range(-self.size, enemy.padHei):
                         if self.y == enemy.y + n:
-                                if self.x >= enemy.x - enemy.padWid:
+                                if self.x >= enemy.x:
                                         self.speed_x *= -1
                                         break
                         n += 1
