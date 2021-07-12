@@ -3,9 +3,11 @@ import pygame
 
 SCR_WID, SCR_HEI = 640, 480
 screen = pygame.display.set_mode((SCR_WID, SCR_HEI))
+red = (255,0,0)
+difficulty = ""
 
 # Below we changed the caption change is below
-pygame.display.set_caption("Georges favorite Ping Pong Game")
+pygame.display.set_caption("Kailey's Pong")
 # Above we changed the caption change above
 
 pygame.font.init()
@@ -13,9 +15,28 @@ clock = pygame.time.Clock()
 FPS = 60
 
 def difficulty():
-        difficulty = input('Would you like to play on easy, medium, or hard? Type e for easy, m for medium, and h for hard!')
-        if difficulty == 'e' or difficulty == 'm' or difficulty == 'h':
-            return difficulty
+        smallfont = pygame.font.SysFont(None, 25)
+        intro = True
+        text = smallfont.render("Would you like to play on easy, or hard? Type E for easy, and H for hard!",True , red)
+        screen.blit(text, [15,220])
+        pygame.display.update()
+        clock.tick(15)
+        while intro == True:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        quit()
+                    elif event.type == pygame.KEYDOWN:
+                        keys = pygame.key.get_pressed()
+                        if keys[pygame.K_e]:
+                                global difficulty
+                                difficulty = "easy"
+                                intro = False
+                        
+                        elif keys[pygame.K_h]:
+                                global difficulty
+                                difficulty = "hard"
+                                intro = False
 
 
 class Player():
