@@ -14,30 +14,6 @@ pygame.font.init()
 clock = pygame.time.Clock()
 FPS = 60
 
-def difficulty():
-        smallfont = pygame.font.SysFont(None, 25)
-        intro = True
-        text = smallfont.render("Would you like to play on easy, or hard? Type E for easy, and H for hard!",True , red)
-        screen.blit(text, [15,220])
-        pygame.display.update()
-        clock.tick(15)
-        while intro == True:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        quit()
-                    elif event.type == pygame.KEYDOWN:
-                        keys = pygame.key.get_pressed()
-                        if keys[pygame.K_e]:
-                                global difficulty
-                                difficulty = "easy"
-                                intro = False
-                        
-                        elif keys[pygame.K_h]:
-                                global difficulty
-                                difficulty = "hard"
-                                intro = False
-
 
 class Player():
         def __init__(self, name):
@@ -167,26 +143,33 @@ class Ball():
                 pygame.draw.rect(screen, (255, 0,0), (self.x, self.y, 8, 8))
 
 
+def difficulty():
+        smallfont = pygame.font.SysFont(None, 25)
+        difficulty = True
+        text = smallfont.render("Would you like to play on easy, or hard? Type E for easy, and H for hard!",True , red)
+        screen.blit(text, [15,220])
+        pygame.display.update()
+        clock.tick(15)
+        while difficulty == True:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        quit()
+                    elif event.type == pygame.KEYDOWN:
+                        keys = pygame.key.get_pressed()
+                        if keys[pygame.K_e]:
+                                global difficulty
+                                difficulty = "easy"
+                                intro = False
+                        
+                        elif keys[pygame.K_h]:
+                                global difficulty
+                                difficulty = "hard"
+                                intro = False
 
-
-#player = Player()
 
 # below we added the main
 def main():
-        difficultySetting = difficulty()
-       
-        if difficultySetting == 'e':
-                print("This prints if the difficulty level was set to easy.")
-                
-
-        elif difficultySetting == 'm':
-                print("This prints if the difficulty level was set to medium.")
-
-
-        elif difficultySetting == 'h':
-                print("This prints if the difficulty level was set to hard.")
-                
-
         player = Player("player")
         enemy = Player("enemy")
         ball = Ball()
@@ -196,30 +179,36 @@ def main():
                                 if event.type == pygame.QUIT:
                                         print ("Game exited by user")
                                         exit()
-                ##process
-                #logic
-                ball.movement(player, enemy)
-                player.movement("player")
-                enemy.movement("enemy")
-                ##logic
-                #draw
-                
-                #insert an image in to the background
-                bkg = pygame.image.load("pong_table.png")
-                trubg = pygame.transform.scale(bkg,(SCR_WID, SCR_HEI))
-                screen.blit(trubg,[0,0])
-                #insert an image in to the background
-                
-                #screen.fill((0, 0, 0))
-                ball.draw()
-                player.draw( )
-                player.scoring("player")
-                enemy.draw()
-                enemy.scoring("enemy")
-                ##draw
-                #_______
-                pygame.display.flip()
-                clock.tick(FPS)
+                if difficulty == "easy":
+                        ball.movement(player, enemy)
+                        player.movement("player")
+                        enemy.movement("enemy")
+                        bkg = pygame.image.load("background.png")
+                        trubg = pygame.transform.scale(bkg,(SCR_WID, SCR_HEI))
+                        screen.blit(trubg,[0,0])
+                        ball.draw()
+                        player.draw( )
+                        player.scoring("player")
+                        enemy.draw()
+                        enemy.scoring("enemy")
+                        pygame.display.flip()
+                        clock.tick(FPS)
+
+                elif difficulty == "hard":
+                        ball.movement(player, enemy)
+                        player.movement("player")
+                        enemy.movement("enemy")
+                        bkg = pygame.image.load("background.png")
+                        trubg = pygame.transform.scale(bkg,(SCR_WID, SCR_HEI))
+                        screen.blit(trubg,[0,0])
+                        ball.draw()
+                        player.draw( )
+                        player.scoring("player")
+                        enemy.draw()
+                        enemy.scoring("enemy")
+                        pygame.display.flip()
+                        clock.tick(FPS)
 
 difficulty()
 main()
+# above we added the main
