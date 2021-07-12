@@ -106,6 +106,9 @@ class Ball():
                 self.x, self.y = SCR_WID/2, SCR_HEI/2
                 self.speed_x = -3
                 self.speed_y = 3
+                self.x2, self.y2 = SCR_WID/2, SCR_HEI/2
+                self.speed_x2 = -3
+                self.speed_y2 = -3
                 self.size = 8
        
         def movement(self, player, enemy):
@@ -127,6 +130,7 @@ class Ball():
                         player.score += 1
                 ##wall col
                 #paddle col
+                        
                 #player
                 for n in range(-self.size, player.padHei):
                         if self.y == player.y + n:
@@ -142,11 +146,81 @@ class Ball():
                                         break
                         n += 1
                 ##paddle col
+
+                for n in range(-self.size, player.padHei):
+                        if self.y == wall.y + n:
+                                if self.x == wall.x - wall.padWid:
+                                        self.speed_x *= -1
+                                        break
+
+        def movement2(self, player, enemy):
+                self.x += self.speed_x2
+                self.y += self.speed_y2
+ 
+                #wall col
+                if self.y <= 0:
+                        self.speed_y2 *= -1
+                elif self.y >= SCR_HEI-self.size:
+                        self.speed_y2 *= -1
+ 
+                if self.x <= 0:
+                        self.__init__()
+                        enemy.score += 1
+                elif self.x >= SCR_WID-self.size:
+                        self.__init__()
+                        self.speed_x2 = 3
+                        player.score += 1
+                ##wall col
+                #paddle col
+                        
+                #player
+                for n in range(-self.size, player.padHei):
+                        if self.y == player.y + n:
+                                if self.x <= player.x + player.padWid:
+                                        self.speed_x2 *= -1
+                                        break
+                        n += 1
+                #enemy
+                for n in range(-self.size, enemy.padHei):
+                        if self.y == enemy.y + n:
+                                if self.x >= enemy.x:
+                                        self.speed_x2 *= -1
+                                        break
+                        n += 1
+                ##paddle col
+
+                for n in range(-self.size, player.padHei):
+                        if self.y == wall.y + n:
+                                if self.x == wall.x - wall.padWid:
+                                        self.speed_x *= -1
+                                        break
  
         def draw(self):
                 pygame.draw.rect(screen, (255, 0,0), (self.x, self.y, 8, 8))
 
+class Wall():
+        def __init__(self):
+                self.x, self.y = (SCR_WID/2)-4, (SCR_HEI/2)-50
+                self.speed = 4
+                self.padWid, self.padHei = 8, 100
+                self.size = 8
+                self.img = pygame.image.load("brick.jpg")
+                self.wall = pygame.transform.scale(self.img, (self.padWid, self.padHei))
+                self.rect = self.wall.get_rect()
+                
+        def move(self):
+                self.y += self.speed
+                if self.y <= 0:
+                        self.speed *= -1
+                elif self.y >= SCR_HEI-self.size:
+                        self.speed *= -1
+                
+        def draw(self):
+                pygame.draw.rect(screen, (255, 255, 255), (self.x, self.y, self.padWid, self.padHei))
+                screen.blit(self.wall, (self.x, self.y))
 
+wall = Wall()
+                
 def difficulty():
         smallfont = pygame.font.SysFont(None, 25)
         difficulty = True
@@ -177,6 +251,7 @@ def main():
         player = Player("player")
         enemy = Player("enemy")
         ball = Ball()
+        ball2 = Ball()
         while True:
                 #process
                 for event in pygame.event.get():
@@ -200,19 +275,24 @@ def main():
 
                 elif difficulty == "hard":
                         ball.movement(player, enemy)
+                        ball2.movement2(player, enemy)
                         player.movement("player")
                         enemy.movement("enemy")
                         bkg = pygame.image.load("background.png")
                         trubg = pygame.transform.scale(bkg,(SCR_WID, SCR_HEI))
                         screen.blit(trubg,[0,0])
                         ball.draw()
+                        ball2.draw()
                         player.draw( )
                         player.scoring("player")
                         enemy.draw()
                         enemy.scoring("enemy")
+                        wall.draw()
+                        wall.move()
                         pygame.display.flip()
                         clock.tick(FPS)
 
 difficulty()
 main()
 # above we added the main
+
