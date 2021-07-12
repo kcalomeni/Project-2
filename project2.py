@@ -221,6 +221,5 @@ def main():
                 pygame.display.flip()
                 clock.tick(FPS)
 
-
+difficulty()
 main()
-# above we added the main
